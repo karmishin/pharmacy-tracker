@@ -1,8 +1,6 @@
 package xyz.karmishin.pharmacytracker.scrapers;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -44,10 +43,7 @@ public class MaksavitItemScraperService extends Service<ObservableList<Item>> {
 	protected Task<ObservableList<Item>> createTask() {
 		final String url = "https://maksavit.ru/catalog/?q=" + name.get();
 
-		return new Task<ObservableList<Item>>() {
-
-			ExecutorService executorService = Executors.newCachedThreadPool();
-			
+		return new Task<ObservableList<Item>>() {			
 			@Override
 			protected ObservableList<Item> call() throws IOException {
 				logger.debug("connecting to " + url);
@@ -66,7 +62,7 @@ public class MaksavitItemScraperService extends Service<ObservableList<Item>> {
 					for (int i = 2; i <= numberOfPages; i++) {		// start with the second page, as we've already processed the first one
 						if (isCancelled()) {
 							logger.debug("task cancelled");
-							break;
+							break;							
 						}
 						
 						String nextPageUrl = url + "&PAGEN_1=" + i;
@@ -88,9 +84,8 @@ public class MaksavitItemScraperService extends Service<ObservableList<Item>> {
 				Elements elements = document.select(".catalog_item");
 
 				for (Element element : elements) {
-					if (isCancelled()) {
+					if (isCancelled())
 						break;
-					}
 					
 					String itemPrice = element.select(".price").text();
 					if (itemPrice.isBlank())
@@ -101,7 +96,7 @@ public class MaksavitItemScraperService extends Service<ObservableList<Item>> {
 
 					var item = new Item(itemName, itemPrice, itemStock, itemUrl);
 
-					executorService.submit(() -> {
+					Platform.runLater(() -> {
 						partialResults.get().add(item);
 						logger.debug("added " + itemName);
 					});
