@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -25,6 +26,12 @@ public class Main extends Application {
 		primaryStage.setTitle("Pharmacy Tracker");
 		primaryStage.setWidth(800);
 		primaryStage.setHeight(500);
+		
+		// todo
+		primaryStage.setOnCloseRequest(value -> {
+			Platform.exit();
+		});
+		
 		primaryStage.show();
 	}
 	

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml" hgap="10" vgap="10">
+	<columnConstraints>
+		<ColumnConstraints hgrow="ALWAYS" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="5.0" />
+		<RowConstraints percentHeight="90.0" />
+		<RowConstraints percentHeight="5.0" />
+	</rowConstraints>
+	
+	<padding>
+    	<Insets top="10" right="25" bottom="10" left="25" />
+    </padding>
+    
+    <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="10">
+	    <Button fx:id="backButton" onAction="#handleBackButtonAction" text="Назад"></Button>
+    </HBox>
+    	
+	<TableView fx:id="tableView" GridPane.columnIndex="0" GridPane.rowIndex="1">
+    	<columns>
+    		<TableColumn fx:id="address" text="Адрес"></TableColumn>
+    		<TableColumn fx:id="price" text="Цена"></TableColumn>
+    		<TableColumn fx:id="stock" text="Наличие"></TableColumn>
+		</columns>   
+	</TableView>
+	
+	<ProgressBar fx:id="progressBar" GridPane.columnIndex="0" GridPane.rowIndex="2" maxWidth="Infinity"></ProgressBar>
+</GridPane>
