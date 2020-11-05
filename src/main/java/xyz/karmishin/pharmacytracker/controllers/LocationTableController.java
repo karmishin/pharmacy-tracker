@@ -11,13 +11,15 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import xyz.karmishin.pharmacytracker.ScreenController;
+import xyz.karmishin.pharmacytracker.SceneSwitcher;
 import xyz.karmishin.pharmacytracker.entities.Item;
 import xyz.karmishin.pharmacytracker.entities.Location;
+import xyz.karmishin.pharmacytracker.scrapers.MaksavitItemScraperService;
 import xyz.karmishin.pharmacytracker.scrapers.MaksavitLocationScraperService;
 
 public class LocationTableController implements Initializable {
 	private MaksavitLocationScraperService service;
+	private MaksavitItemScraperService itemService;
 
 	@FXML
 	private Label label;
@@ -32,14 +34,15 @@ public class LocationTableController implements Initializable {
 	@FXML
 	private TableColumn<Location, String> stock;
 
-	public LocationTableController(Item item) {
+	public LocationTableController(Item item, MaksavitItemScraperService itemService) {
 		service = new MaksavitLocationScraperService(item);
+		service.start();
+
+		this.itemService = itemService;
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		service.start();
-
 		tableView.itemsProperty().bind(service.partialResultsProperty());
 		progressBar.progressProperty().bind(service.progressProperty());
 
@@ -59,8 +62,9 @@ public class LocationTableController implements Initializable {
 		if (service.isRunning()) {
 			service.cancel();
 		}
-		
-		var screenController = ScreenController.getInstance();
-		screenController.activate("itemTable");
+
+		var itemTableController = new ItemTableController(itemService);
+		var sceneSwitcher = new SceneSwitcher("/fxml/itemtable.fxml", itemTableController, event);
+		sceneSwitcher.switchScene();
 	}
 }

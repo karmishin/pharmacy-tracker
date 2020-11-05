@@ -1,39 +1,27 @@
 package xyz.karmishin.pharmacytracker.controllers;
 
-import java.io.IOException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import xyz.karmishin.pharmacytracker.ScreenController;
+import xyz.karmishin.pharmacytracker.SceneSwitcher;
 
-public class SearchPromptController {
-	private static Logger logger = LogManager.getLogger(SearchPromptController.class);
+public class SearchPromptController implements Initializable {
+	@FXML
+	private TextField queryField;
 
-	@FXML private TextField queryField;
-	
-	@FXML protected void handleSearchButtonAction(ActionEvent event) {
-		try {
-			var loader = new FXMLLoader();
-			var itemTableController = new ItemTableController(queryField.getText());
-			loader.setLocation(getClass().getResource("/fxml/itemtable.fxml"));
-			loader.setController(itemTableController);
-			
-			Pane itemTable = loader.load();
-			var screenController = ScreenController.getInstance();
-			screenController.addScreen("itemTable", (Pane) itemTable);
-			screenController.activate("itemTable");
-		} catch (IOException e) {
-			e.printStackTrace();
-			var alert = new Alert(AlertType.ERROR, e.getMessage());
-			alert.show();
-		}
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		
 	}
 
+	@FXML
+	protected void handleSearchButtonAction(ActionEvent event) {
+		var itemTableController = new ItemTableController(queryField.getText());
+		var sceneSwitcher = new SceneSwitcher("/fxml/itemtable.fxml", itemTableController, event);
+		sceneSwitcher.switchScene();
+	}
 }

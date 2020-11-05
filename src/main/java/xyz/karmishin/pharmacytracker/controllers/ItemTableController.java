@@ -1,44 +1,48 @@
 package xyz.karmishin.pharmacytracker.controllers;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Pane;
-import xyz.karmishin.pharmacytracker.ScreenController;
+import xyz.karmishin.pharmacytracker.SceneSwitcher;
 import xyz.karmishin.pharmacytracker.entities.Item;
 import xyz.karmishin.pharmacytracker.scrapers.MaksavitItemScraperService;
 
 public class ItemTableController implements Initializable {
 	private MaksavitItemScraperService service;
-	
-	@FXML private Label label;
-	@FXML private ProgressBar progressBar;
-	@FXML private TableView<Item> tableView;
-	@FXML private TableColumn<Item, String> title;
-	@FXML private TableColumn<Item, String> price;
-	@FXML private TableColumn<Item, String> stock;
-	
+
+	@FXML
+	private Label label;
+	@FXML
+	private ProgressBar progressBar;
+	@FXML
+	private TableView<Item> tableView;
+	@FXML
+	private TableColumn<Item, String> title;
+	@FXML
+	private TableColumn<Item, String> price;
+	@FXML
+	private TableColumn<Item, String> stock;
+
 	public ItemTableController(String name) {
 		service = new MaksavitItemScraperService(name);
+		service.start();
 	}
 	
+	public ItemTableController(MaksavitItemScraperService service) {
+		this.service = service;
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		service.start();
-		
 		tableView.itemsProperty().bind(service.partialResultsProperty());
 		progressBar.progressProperty().bind(service.progressProperty());
 
@@ -46,7 +50,7 @@ public class ItemTableController implements Initializable {
 		title.prefWidthProperty().bind(tableView.widthProperty().divide(2));
 		price.prefWidthProperty().bind(tableView.widthProperty().divide(4));
 		stock.prefWidthProperty().bind(tableView.widthProperty().divide(4));
-		
+
 		// set the column factories
 		title.setCellValueFactory(new PropertyValueFactory<Item, String>("title"));
 		price.setCellValueFactory(new PropertyValueFactory<Item, String>("price"));
@@ -54,36 +58,28 @@ public class ItemTableController implements Initializable {
 
 		tableView.setRowFactory(value -> {
 			TableRow<Item> row = new TableRow<>();
+
 			row.setOnMouseClicked(event -> {
 				if (event.getClickCount() == 2 && (!row.isEmpty())) {
 					var item = row.getItem();
-
-					var loader = new FXMLLoader();
-					var locationTableController = new LocationTableController(item);
-					loader.setLocation(getClass().getResource("/fxml/locationtable.fxml"));
-					loader.setController(locationTableController);
-					try {
-						Pane locationTable = loader.load();
-						var screenController = ScreenController.getInstance();
-						screenController.addScreen("locationTable", (Pane) locationTable);
-						screenController.activate("locationTable");
-					} catch (IOException e) {
-						e.printStackTrace();
-						var alert = new Alert(AlertType.ERROR, e.getMessage());
-						alert.show();
-					}	
+					var locationTableController = new LocationTableController(item, service);
+					var sceneSwitcher = new SceneSwitcher("/fxml/locationtable.fxml", locationTableController, event);
+					sceneSwitcher.switchScene();
 				}
 			});
 
 			return row;
 		});
 	}
-	
-	@FXML protected void handleBackButtonAction(ActionEvent event) {
+
+	@FXML
+	protected void handleBackButtonAction(ActionEvent event) {
 		if (service.isRunning()) {
 			service.cancel();
 		}
-		var screenController = ScreenController.getInstance();
-		screenController.activate("searchPrompt");
+
+		var searchPromptController = new SearchPromptController();
+		var sceneSwitcher = new SceneSwitcher("/fxml/searchprompt.fxml", searchPromptController, event);
+		sceneSwitcher.switchScene();
 	}
 }

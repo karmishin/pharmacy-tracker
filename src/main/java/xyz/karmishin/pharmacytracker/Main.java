@@ -2,39 +2,22 @@ package xyz.karmishin.pharmacytracker;
 
 import java.io.IOException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import xyz.karmishin.pharmacytracker.controllers.SearchPromptController;
 
 public class Main extends Application {
-	private static Logger logger = LogManager.getLogger(Main.class);
-	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		ScreenController screenController = ScreenController.getInstance();
+		var sceneSwitcher = new SceneSwitcher("/fxml/searchprompt.fxml", new SearchPromptController(), primaryStage);
+		sceneSwitcher.switchScene();
 		
-		Pane searchPrompt = FXMLLoader.load(getClass().getResource("/fxml/searchprompt.fxml"));
-		screenController.addScreen("searchPrompt", searchPrompt);
-		screenController.activate("searchPrompt");
-		
-		primaryStage.setScene(screenController.getMainScene());
 		primaryStage.setTitle("Pharmacy Tracker");
 		primaryStage.setWidth(800);
 		primaryStage.setHeight(500);
-		
-		// todo
-		primaryStage.setOnCloseRequest(value -> {
-			Platform.exit();
-		});
-		
 		primaryStage.show();
 	}
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
