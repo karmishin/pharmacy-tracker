@@ -38,44 +38,45 @@ public class MaksavitItemScraperService extends Service<ObservableList<Item>> {
 	public ReadOnlyObjectProperty<ObservableList<Item>> partialResultsProperty() {
 		return partialResults.getReadOnlyProperty();
 	}
-	
+
 	@Override
 	protected Task<ObservableList<Item>> createTask() {
 		final String url = "https://maksavit.ru/catalog/?q=" + name.get();
 
-		return new Task<ObservableList<Item>>() {			
+		return new Task<ObservableList<Item>>() {
 			@Override
 			protected ObservableList<Item> call() throws IOException {
 				logger.debug("connecting to " + url);
-				Document document = Jsoup.connect(url).get();
+				Document firstPage = Jsoup.connect(url).get();
+				processPage(firstPage);
 
-				processPage(document);	// process the first page
-				
-				/* The following block of code will try to find a pagination element. */
-				Elements pagination = document.select(".nums > a");
-				if (pagination.isEmpty()) {		// no pagination means there's only one page
-					updateProgress(100, 100);
-				} else {
-					// determine the number of pages by the last element in the pagination
+				/* Try to find a pagination element. */
+				Elements pagination = firstPage.select(".nums > a");
+
+				/* Handle multiple pages. */
+				if (!pagination.isEmpty()) {
+					/* Determine the number of pages by the last element in the pagination. */
 					int numberOfPages = Integer.parseInt(pagination.last().text());
-										
-					for (int i = 2; i <= numberOfPages; i++) {		// start with the second page, as we've already processed the first one
+
+					/* Start with the second page, as we've already processed the first one. */
+					for (int i = 2; i <= numberOfPages; i++) {
 						if (isCancelled()) {
 							logger.debug("task cancelled");
-							break;							
+							break;
 						}
-						
+
 						String nextPageUrl = url + "&PAGEN_1=" + i;
 						logger.debug("connecting to " + nextPageUrl);
 						Document nextPage = Jsoup.connect(nextPageUrl).get();
-						
-						logger.debug("processing page " + i + " of " + numberOfPages);
+
+						logger.debug("processing page " + i + "/" + numberOfPages);
 						processPage(nextPage);
-						
+
 						updateProgress(i, numberOfPages);
 					}
 				}
 
+				updateProgress(100, 100);
 				logger.debug("task complete");
 				return partialResults.get();
 			}
@@ -86,7 +87,7 @@ public class MaksavitItemScraperService extends Service<ObservableList<Item>> {
 				for (Element element : elements) {
 					if (isCancelled())
 						break;
-					
+
 					String itemPrice = element.select(".price").text();
 					if (itemPrice.isBlank())
 						continue;
@@ -101,7 +102,7 @@ public class MaksavitItemScraperService extends Service<ObservableList<Item>> {
 						logger.debug("added " + itemName);
 					});
 				}
-			}	
+			}
 		};
 	}
 
