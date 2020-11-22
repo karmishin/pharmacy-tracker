@@ -1,5 +1,8 @@
 package xyz.karmishin.pharmacytracker.scrapers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -18,10 +21,9 @@ import xyz.karmishin.pharmacytracker.entities.Item;
 import xyz.karmishin.pharmacytracker.entities.Location;
 
 public class MaksavitLocationScraperService extends Service<ObservableList<Location>> {
-	private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
 
-
-    private final Item item; 
+    private final Item item;
     private ReadOnlyObjectWrapper<ObservableList<Location>> partialResults = new ReadOnlyObjectWrapper<>(this,
             "partialResults", FXCollections.observableArrayList());
 
@@ -35,6 +37,21 @@ public class MaksavitLocationScraperService extends Service<ObservableList<Locat
 
     public ReadOnlyObjectProperty<ObservableList<Location>> partialResultsProperty() {
         return partialResults.getReadOnlyProperty();
+    }
+
+    private String determineStock(String stockAttribute) {
+        switch (stockAttribute) {
+            case "-1":
+                return "Под заказ";
+            case "1":
+                return "1 шт.";
+            case "2":
+                return "2+ шт.";
+            case "3":
+                return "5+ шт.";
+            default:
+                return stockAttribute;
+        }
     }
 
     @Override
@@ -51,8 +68,7 @@ public class MaksavitLocationScraperService extends Service<ObservableList<Locat
                         break;
                     }
 
-                    String locationStock = element.attr("data-available");
-                    if (locationStock.contentEquals("-1")) continue;
+                    String locationStock = determineStock(element.attr("data-available"));
                     String locationAddress = element.attr("data-address");
                     String locationPrice = element.attr("data-price");
 
@@ -69,6 +85,5 @@ public class MaksavitLocationScraperService extends Service<ObservableList<Locat
 
         };
     }
-    
-    
+
 }
