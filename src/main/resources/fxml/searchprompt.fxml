@@ -23,11 +23,11 @@
         <ToggleGroup fx:id="group" />
     </fx:define>	
     
-	<RadioButton fx:id="maksavitRadioButton" text="Максавит" toggleGroup="$group" selected="true"
+	<RadioButton fx:id="maksavit" text="Максавит" toggleGroup="$group" selected="true"
 		GridPane.columnIndex="0" GridPane.rowIndex="2">
 	</RadioButton>
 	    	
-	<RadioButton fx:id="vitaRadioButton" text="Вита" toggleGroup="$group"
+	<RadioButton fx:id="vita" text="Вита" toggleGroup="$group"
 		GridPane.columnIndex="0" GridPane.rowIndex="3">
 	</RadioButton>
   

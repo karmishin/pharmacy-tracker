@@ -6,18 +6,22 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import xyz.karmishin.pharmacytracker.SceneSwitcher;
 import xyz.karmishin.pharmacytracker.entities.Item;
-import xyz.karmishin.pharmacytracker.scrapers.MaksavitItemScraperService;
+import xyz.karmishin.pharmacytracker.scrapers.ScraperNotFoundException;
+import xyz.karmishin.pharmacytracker.scrapers.ScraperService;
+import xyz.karmishin.pharmacytracker.scrapers.ScraperServiceFactory;
 
 public class ItemTableController implements Initializable {
-	private MaksavitItemScraperService service;
+	private ScraperService<Item> service;
 
 	@FXML
 	private Label label;
@@ -32,12 +36,17 @@ public class ItemTableController implements Initializable {
 	@FXML
 	private TableColumn<Item, String> stock;
 
-	public ItemTableController(String name) {
-		service = new MaksavitItemScraperService(name);
-		service.start();
+	public ItemTableController(String name, String pharmacyChain) {
+		try {
+			service = ScraperServiceFactory.makeItemScraperService(name, pharmacyChain);
+			service.start();
+		} catch (ScraperNotFoundException e) {
+			var alert = new Alert(AlertType.ERROR, e.getMessage());
+			alert.show();
+		}
 	}
-	
-	public ItemTableController(MaksavitItemScraperService service) {
+
+	public ItemTableController(ScraperService<Item> service) {
 		this.service = service;
 	}
 

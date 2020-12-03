@@ -1,8 +1,5 @@
 package xyz.karmishin.pharmacytracker.scrapers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -11,33 +8,24 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import xyz.karmishin.pharmacytracker.entities.Item;
 import xyz.karmishin.pharmacytracker.entities.Location;
 
-public class MaksavitLocationScraperService extends Service<ObservableList<Location>> {
+public class MaksavitLocationScraperService extends ScraperService<Location> {
     private static Logger logger = LogManager.getLogger();
 
     private final Item item;
-    private ReadOnlyObjectWrapper<ObservableList<Location>> partialResults = new ReadOnlyObjectWrapper<>(this,
-            "partialResults", FXCollections.observableArrayList());
 
     public MaksavitLocationScraperService(Item item) {
         this.item = item;
     }
 
-    public ObservableList<Location> getPartialResults() {
-        return partialResults.get();
-    }
-
-    public ReadOnlyObjectProperty<ObservableList<Location>> partialResultsProperty() {
-        return partialResults.getReadOnlyProperty();
-    }
+    @Override
+	public String getPharmacyChain() {
+		return "maksavit";
+	}
 
     private String determineStock(String stockAttribute) {
         switch (stockAttribute) {

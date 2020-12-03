@@ -6,6 +6,8 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
@@ -14,12 +16,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import xyz.karmishin.pharmacytracker.SceneSwitcher;
 import xyz.karmishin.pharmacytracker.entities.Item;
 import xyz.karmishin.pharmacytracker.entities.Location;
-import xyz.karmishin.pharmacytracker.scrapers.MaksavitItemScraperService;
-import xyz.karmishin.pharmacytracker.scrapers.MaksavitLocationScraperService;
+import xyz.karmishin.pharmacytracker.scrapers.ScraperNotFoundException;
+import xyz.karmishin.pharmacytracker.scrapers.ScraperService;
+import xyz.karmishin.pharmacytracker.scrapers.ScraperServiceFactory;
 
 public class LocationTableController implements Initializable {
-	private MaksavitLocationScraperService service;
-	private MaksavitItemScraperService itemService;
+	private ScraperService<Location> locationService;
+	private ScraperService<Item> itemService;
 
 	@FXML
 	private Label label;
@@ -34,17 +37,22 @@ public class LocationTableController implements Initializable {
 	@FXML
 	private TableColumn<Location, String> stock;
 
-	public LocationTableController(Item item, MaksavitItemScraperService itemService) {
-		service = new MaksavitLocationScraperService(item);
-		service.start();
+	public LocationTableController(Item item, ScraperService<Item> itemService) {
+		try {
+			locationService = ScraperServiceFactory.makeLocationScraperService(item, itemService.getPharmacyChain());
+			locationService.start();
 
-		this.itemService = itemService;
+			this.itemService = itemService;
+		} catch (ScraperNotFoundException e) {
+			var alert = new Alert(AlertType.ERROR, e.getMessage());
+			alert.show();
+		}
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		tableView.itemsProperty().bind(service.partialResultsProperty());
-		progressBar.progressProperty().bind(service.progressProperty());
+		tableView.itemsProperty().bind(locationService.partialResultsProperty());
+		progressBar.progressProperty().bind(locationService.progressProperty());
 
 		// dynamically resizable columns
 		address.prefWidthProperty().bind(tableView.widthProperty().divide(2));
@@ -59,8 +67,8 @@ public class LocationTableController implements Initializable {
 
 	@FXML
 	protected void handleBackButtonAction(ActionEvent event) {
-		if (service.isRunning()) {
-			service.cancel();
+		if (locationService.isRunning()) {
+			locationService.cancel();
 		}
 
 		var itemTableController = new ItemTableController(itemService);

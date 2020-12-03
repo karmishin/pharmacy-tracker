@@ -10,33 +10,24 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import xyz.karmishin.pharmacytracker.entities.Item;
 
-public class MaksavitItemScraperService extends Service<ObservableList<Item>> {
+public class MaksavitItemScraperService extends ScraperService<Item> {
 	private static Logger logger = LogManager.getLogger();
 
 	private StringProperty name = new SimpleStringProperty();
-	private ReadOnlyObjectWrapper<ObservableList<Item>> partialResults = new ReadOnlyObjectWrapper<>(this,
-			"partialResults", FXCollections.observableArrayList());
 
 	public MaksavitItemScraperService(String name) {
 		this.name.set(name);
 	}
 
-	public ObservableList<Item> getPartialResults() {
-		return partialResults.get();
-	}
-
-	public ReadOnlyObjectProperty<ObservableList<Item>> partialResultsProperty() {
-		return partialResults.getReadOnlyProperty();
+	@Override
+	public String getPharmacyChain() {
+		return "maksavit";
 	}
 
 	@Override
@@ -105,5 +96,4 @@ public class MaksavitItemScraperService extends Service<ObservableList<Item>> {
 			}
 		};
 	}
-
 }
