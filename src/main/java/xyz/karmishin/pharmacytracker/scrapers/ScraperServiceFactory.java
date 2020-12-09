@@ -9,10 +9,8 @@ public class ScraperServiceFactory {
         switch (pharmacyChain) {
             case "maksavit":
                 return new MaksavitItemScraperService(query);
-            /*
             case "vita":
                 return new VitaItemScraperService(query);
-            */
             default:
                 throw new ScraperNotFoundException(pharmacyChain);
         }
