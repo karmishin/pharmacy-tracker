@@ -10,6 +10,8 @@ import org.jsoup.select.Elements;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import xyz.karmishin.pharmacytracker.entities.Item;
 import xyz.karmishin.pharmacytracker.entities.Location;
 
@@ -23,9 +25,9 @@ public class MaksavitLocationScraperService extends ScraperService<Location> {
     }
 
     @Override
-	public String getPharmacyChain() {
-		return "maksavit";
-	}
+    public String getPharmacyChain() {
+        return "maksavit";
+    }
 
     private String determineStock(String stockAttribute) {
         switch (stockAttribute) {
@@ -44,34 +46,43 @@ public class MaksavitLocationScraperService extends ScraperService<Location> {
 
     @Override
     protected Task<ObservableList<Location>> createTask() {
-        return new Task<ObservableList<Location>>() {
-            @Override
-            protected ObservableList<Location> call() throws Exception {
-                Document document = Jsoup.connect(item.getUrl()).get();
-                Elements elements = document.select(".pharmacy-item");
+        var task = new ScraperTask();
 
-                for (Element element : elements) {
-                    if (isCancelled()) {
-                        logger.debug("task cancelled");
-                        break;
-                    }
+        task.setOnFailed(value -> {
+            task.getException().printStackTrace();
+            var alert = new Alert(AlertType.ERROR, task.getException().getMessage());
+            alert.show();
+        });
 
-                    String locationStock = determineStock(element.attr("data-available"));
-                    String locationAddress = element.attr("data-address");
-                    String locationPrice = element.attr("data-price");
+        return task;
+    }
 
-                    var location = new Location(locationAddress, locationPrice, locationStock);
-                    Platform.runLater(() -> {
-                        partialResults.get().add(location);
-                        logger.debug("added " + locationAddress);
-                    });
+    private class ScraperTask extends Task<ObservableList<Location>> {
+        @Override
+        protected ObservableList<Location> call() throws Exception {
+            Document document = Jsoup.connect(item.getUrl()).get();
+            Elements elements = document.select(".pharmacy-item");
+
+            for (Element element : elements) {
+                if (isCancelled()) {
+                    logger.debug("task cancelled");
+                    break;
                 }
 
-                updateProgress(100, 100);
-                return partialResults.get();
+                String locationStock = determineStock(element.attr("data-available"));
+                String locationAddress = element.attr("data-address");
+                String locationPrice = element.attr("data-price");
+
+                var location = new Location(locationAddress, locationPrice, locationStock);
+                Platform.runLater(() -> {
+                    partialResults.get().add(location);
+                    logger.debug("added " + locationAddress);
+                });
             }
 
-        };
+            updateProgress(100, 100);
+            return partialResults.get();
+        }
     }
 
 }
