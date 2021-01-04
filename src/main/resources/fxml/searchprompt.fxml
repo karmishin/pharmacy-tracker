@@ -3,32 +3,80 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml">
+    <center>
+        <GridPane hgap="10" vgap="10" alignment="center">
+            <padding>
+                <Insets top="10" right="25" bottom="10" left="25" />
+            </padding>
+            
+            <HBox alignment="center" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
+                <ImageView fitHeight="48" preserveRatio="true">
+                    <HBox.margin>
+                        <Insets right="10"/>
+                    </HBox.margin>    
+                    <image>
+                        <Image url="@../logo.png" />
+                    </image>
+                </ImageView>
 
-<GridPane xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
-    <padding>
-    	<Insets top="10" right="25" bottom="10" left="25" />
-    </padding>
- 
-    <Label text="Введите запрос:"
-        GridPane.columnIndex="0" GridPane.rowIndex="1" />
- 
-    <TextField fx:id="queryField"
-        GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Text text="Поиск лекарств" >
+                    <font>
+                        <Font size="32.0"/>
+                    </font>
+                </Text>
+
+                <GridPane.margin>
+                    <Insets bottom="15" />
+                </GridPane.margin>
+            </HBox>
         
-    <Button text="Поиск" onAction="#handleSearchButtonAction"
-    	GridPane.columnIndex="2" GridPane.rowIndex="1" />
-    	
-    <fx:define>
-        <ToggleGroup fx:id="group" />
-    </fx:define>	
-    
-	<RadioButton fx:id="maksavit" text="Максавит" toggleGroup="$group" selected="true"
-		GridPane.columnIndex="0" GridPane.rowIndex="2">
-	</RadioButton>
-	    	
-	<RadioButton fx:id="vita" text="Вита" toggleGroup="$group"
-		GridPane.columnIndex="0" GridPane.rowIndex="3">
-	</RadioButton>
-  
-</GridPane>
+            <TextField fx:id="queryField"
+                GridPane.columnIndex="0" GridPane.rowIndex="1">  
+                <font>
+                    <Font size="24.0"/>
+                </font>
+            </TextField>
+                
+            <Button text="Найти" onAction="#handleSearchButtonAction" styleClass="search-button"
+                GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <font>
+                    <Font size="24.0"/>
+                </font>
+            </Button>
+                
+            <fx:define>
+                <ToggleGroup fx:id="group" />
+            </fx:define>	
+            
+            <RadioButton fx:id="maksavit" text="Максавит" toggleGroup="$group" selected="true"
+                GridPane.columnIndex="0" GridPane.rowIndex="2">
+            </RadioButton>
+                    
+            <RadioButton fx:id="vita" text="Вита" toggleGroup="$group"
+                GridPane.columnIndex="0" GridPane.rowIndex="3">
+            </RadioButton>
+
+            <RadioButton fx:id="aptekaru" text="Apteka.ru" toggleGroup="$group" disable="true"
+                GridPane.columnIndex="0" GridPane.rowIndex="4">
+            </RadioButton>
+        </GridPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="bottom_right">
+            <Button text="Настройки">
+                <HBox.margin>
+                    <Insets right="10" bottom="10" />
+                </HBox.margin>
+            </Button>
+            <Button text="О программе">
+                <HBox.margin>
+                    <Insets right="10" bottom="10" />
+                </HBox.margin>
+            </Button>
+        </HBox>
+    </bottom>
+</BorderPane>
