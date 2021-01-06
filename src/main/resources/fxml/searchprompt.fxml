@@ -22,7 +22,7 @@
                     </image>
                 </ImageView>
 
-                <Text text="Поиск лекарств" >
+                <Text text="%mainscreen.title" >
                     <font>
                         <Font size="32.0"/>
                     </font>
@@ -40,7 +40,7 @@
                 </font>
             </TextField>
                 
-            <Button text="Найти" onAction="#handleSearchButtonAction" styleClass="search-button"
+            <Button text="%mainscreen.search" onAction="#handleSearchButtonAction"
                 GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <font>
                     <Font size="24.0"/>
@@ -51,15 +51,15 @@
                 <ToggleGroup fx:id="group" />
             </fx:define>	
             
-            <RadioButton fx:id="maksavit" text="Максавит" toggleGroup="$group" selected="true"
+            <RadioButton fx:id="maksavit" text="%pharmacy.maksavit" toggleGroup="$group" selected="true"
                 GridPane.columnIndex="0" GridPane.rowIndex="2">
             </RadioButton>
                     
-            <RadioButton fx:id="vita" text="Вита" toggleGroup="$group"
+            <RadioButton fx:id="vita" text="%pharmacy.vita" toggleGroup="$group"
                 GridPane.columnIndex="0" GridPane.rowIndex="3">
             </RadioButton>
 
-            <RadioButton fx:id="aptekaru" text="Apteka.ru" toggleGroup="$group" disable="true"
+            <RadioButton fx:id="aptekaru" text="%pharmacy.aptekaru" toggleGroup="$group" disable="true"
                 GridPane.columnIndex="0" GridPane.rowIndex="4">
             </RadioButton>
         </GridPane>
@@ -67,12 +67,12 @@
 
     <bottom>
         <HBox alignment="bottom_right">
-            <Button text="Настройки">
+            <Button text="%mainscreen.settings">
                 <HBox.margin>
                     <Insets right="10" bottom="10" />
                 </HBox.margin>
             </Button>
-            <Button text="О программе">
+            <Button text="%mainscreen.about">
                 <HBox.margin>
                     <Insets right="10" bottom="10" />
                 </HBox.margin>

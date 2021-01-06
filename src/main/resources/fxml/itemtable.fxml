@@ -20,14 +20,14 @@
     </padding>
     
     <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="10">
-	    <Button fx:id="backButton" onAction="#handleBackButtonAction" text="Назад"></Button>
+	    <Button fx:id="backButton" onAction="#handleBackButtonAction" text="%results.back_button"></Button>
     </HBox>
     	
 	<TableView fx:id="tableView" GridPane.columnIndex="0" GridPane.rowIndex="1">
     	<columns>
-    		<TableColumn fx:id="title" text="Наименование"></TableColumn>
-    		<TableColumn fx:id="price" text="Цена"></TableColumn>
-    		<TableColumn fx:id="stock" text="Наличие"></TableColumn>
+    		<TableColumn fx:id="title" text="%results.title"></TableColumn>
+    		<TableColumn fx:id="price" text="%results.price"></TableColumn>
+    		<TableColumn fx:id="stock" text="%results.stock"></TableColumn>
 		</columns>   
 	</TableView>
 	

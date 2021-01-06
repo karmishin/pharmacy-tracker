@@ -1,6 +1,8 @@
 package xyz.karmishin.pharmacytracker;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +35,10 @@ public class SceneSwitcher {
         var loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(path));
         loader.setController(controller);
+
+        var locale = new Locale("ru", "RU");    // TODO
+        var resourceBundle = ResourceBundle.getBundle("/strings/strings", locale);
+        loader.setResources(resourceBundle);
 
         try {
             Pane pane = loader.load();
