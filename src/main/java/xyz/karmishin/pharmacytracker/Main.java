@@ -10,13 +10,14 @@ import xyz.karmishin.pharmacytracker.controllers.SearchPromptController;
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		var sceneSwitcher = new SceneSwitcher("/fxml/searchprompt.fxml", new SearchPromptController(), primaryStage);
-		sceneSwitcher.switchScene();
-		
-		primaryStage.setTitle("Pharmacy Tracker");
 		primaryStage.setWidth(800);
 		primaryStage.setHeight(500);
+		primaryStage.setTitle("Pharmacy Tracker");
 		primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/logo.png")));
+
+		var sceneSwitcher = new SceneSwitcher("/fxml/searchprompt.fxml", new SearchPromptController(), primaryStage);
+		sceneSwitcher.switchScene();
+
 		primaryStage.show();
 	}
 

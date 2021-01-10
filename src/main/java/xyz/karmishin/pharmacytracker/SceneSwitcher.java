@@ -43,8 +43,11 @@ public class SceneSwitcher {
         try {
             Pane pane = loader.load();
             var scene = new Scene(pane);
-
             primaryStage.setScene(scene);
+
+            /* a fix for GNOME-based desktop environments */
+            primaryStage.setWidth(primaryStage.getWidth());
+		    primaryStage.setHeight(primaryStage.getHeight());
         } catch (IOException e) {
             e.printStackTrace();
             var alert = new Alert(AlertType.ERROR, e.getMessage());
