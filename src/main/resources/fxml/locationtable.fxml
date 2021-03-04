@@ -25,7 +25,7 @@
     	
 	<TableView fx:id="tableView" GridPane.columnIndex="0" GridPane.rowIndex="1">
     	<columns>
-    		<TableColumn fx:id="address" text="%results.title"></TableColumn>
+    		<TableColumn fx:id="address" text="%results.address"></TableColumn>
     		<TableColumn fx:id="price" text="%results.price"></TableColumn>
     		<TableColumn fx:id="stock" text="%results.stock"></TableColumn>
 		</columns>   

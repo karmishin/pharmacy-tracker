@@ -21,6 +21,11 @@
     
     <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="10">
 	    <Button fx:id="backButton" onAction="#handleBackButtonAction" text="%results.back_button"></Button>
+		<Text text="%results.header">
+			<font>
+                <Font size="18.0"/>
+			</font>
+		</Text>
     </HBox>
     	
 	<TableView fx:id="tableView" GridPane.columnIndex="0" GridPane.rowIndex="1">
