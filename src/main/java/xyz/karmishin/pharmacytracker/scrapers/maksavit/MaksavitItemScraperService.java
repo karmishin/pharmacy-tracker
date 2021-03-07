@@ -1,4 +1,4 @@
-package xyz.karmishin.pharmacytracker.scrapers;
+package xyz.karmishin.pharmacytracker.scrapers.maksavit;
 
 import java.io.IOException;
 
@@ -17,6 +17,7 @@ import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import xyz.karmishin.pharmacytracker.entities.Item;
+import xyz.karmishin.pharmacytracker.scrapers.ScraperService;
 
 public class MaksavitItemScraperService extends ScraperService<Item> {
 	private static Logger logger = LogManager.getLogger();

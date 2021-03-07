@@ -2,6 +2,9 @@ package xyz.karmishin.pharmacytracker.scrapers;
 
 import xyz.karmishin.pharmacytracker.entities.Item;
 import xyz.karmishin.pharmacytracker.entities.Location;
+import xyz.karmishin.pharmacytracker.scrapers.maksavit.MaksavitItemScraperService;
+import xyz.karmishin.pharmacytracker.scrapers.maksavit.MaksavitLocationScraperService;
+import xyz.karmishin.pharmacytracker.scrapers.vita.VitaItemScraperService;
 
 public class ScraperServiceFactory {
     public static ScraperService<Item> makeItemScraperService(String query, String pharmacyChain)

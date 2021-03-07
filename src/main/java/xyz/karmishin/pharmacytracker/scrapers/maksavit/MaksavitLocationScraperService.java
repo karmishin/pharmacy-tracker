@@ -1,4 +1,4 @@
-package xyz.karmishin.pharmacytracker.scrapers;
+package xyz.karmishin.pharmacytracker.scrapers.maksavit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import xyz.karmishin.pharmacytracker.entities.Item;
 import xyz.karmishin.pharmacytracker.entities.Location;
+import xyz.karmishin.pharmacytracker.scrapers.ScraperService;
 
 public class MaksavitLocationScraperService extends ScraperService<Location> {
     private static Logger logger = LogManager.getLogger();
