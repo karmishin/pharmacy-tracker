@@ -7,6 +7,7 @@ module xyz.karmishin.pharmacytracker {
     requires java.net.http;
     requires transitive javafx.controls;
     requires transitive javafx.fxml;
+    requires transitive javafx.web;
     requires org.jsoup;
     requires com.fasterxml.jackson.databind;
     requires org.apache.logging.log4j;

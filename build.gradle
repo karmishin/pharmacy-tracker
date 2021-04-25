@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
 application {
@@ -7,31 +8,32 @@ application {
 	mainClass = 'xyz.karmishin.pharmacytracker.Main'
 }
 
-java {
+java{
     modularity.inferModulePath = true
 }
 
-def currentOS = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem;
-def platform
-if (currentOS.isWindows()) {
-    platform = 'win'
-} else if (currentOS.isLinux()) {
-    platform = 'linux'
-} else if (currentOS.isMacOsX()) {
-    platform = 'mac'
+javafx {
+    version = "16"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web' ]
 }
+
+compileJava.options.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation "org.openjfx:javafx-base:15.0.1:${platform}"
-    implementation "org.openjfx:javafx-controls:15.0.1:${platform}"
-    implementation "org.openjfx:javafx-graphics:15.0.1:${platform}"
-    implementation "org.openjfx:javafx-fxml:15.0.1:${platform}"
-	implementation 'org.jsoup:jsoup:1.13.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.0'
-	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.0'
-  	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.0'
+    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
+  	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
+}
+
+run {
+    main = 'xyz.karmishin.pharmacytracker/xyz.karmishin.pharmacytracker.Main'
+}
+
+wrapper {
+    gradleVersion = '7.0'
 }

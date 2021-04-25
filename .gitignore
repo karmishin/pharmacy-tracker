@@ -68,3 +68,5 @@ build
 # Visual Studio Code
 .vscode/*
 .classpath
+
+.idea/
