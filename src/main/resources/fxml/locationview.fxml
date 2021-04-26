@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import javafx.scene.web.WebView?>
+<GridPane xmlns:fx="http://javafx.com/fxml" hgap="10" vgap="10">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="20.0" />
+        <RowConstraints percentHeight="80.0" />
+    </rowConstraints>
+
+    <padding>
+        <Insets top="10" right="25" bottom="10" left="25" />
+    </padding>
+
+    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <HBox>
+            <Button fx:id="backButton" onAction="#handleBackButtonAction" text="%results.back_button">
+                <HBox.margin>
+                    <Insets right="10"/>
+                </HBox.margin>
+            </Button>
+            <Button fx:id="addToListButton" text="Добавить в список покупок"/>
+        </HBox>
+        <Text fx:id="titleText">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Text>
+        <Text fx:id="priceText">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Text>
+        <Text fx:id="addressText">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Text>
+    </VBox>
+
+    <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <Tab text="На карте">
+            <WebView fx:id="webView"/>
+        </Tab>
+    </TabPane>
+
+</GridPane>

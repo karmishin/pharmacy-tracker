@@ -3,7 +3,6 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
 <GridPane xmlns:fx="http://javafx.com/fxml" hgap="10" vgap="10">
 	<columnConstraints>
@@ -20,21 +19,16 @@
     </padding>
     
     <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="10">
-	    <Button fx:id="backButton" onAction="#handleBackButtonAction" text="%results.back_button"></Button>
-		<Text text="%results.header">
-			<font>
-                <Font size="18.0"/>
-			</font>
-		</Text>
+		<Button fx:id="backButton" onAction="#handleBackButtonAction" text="%results.back_button"/>
     </HBox>
     	
 	<TableView fx:id="tableView" GridPane.columnIndex="0" GridPane.rowIndex="1">
     	<columns>
-    		<TableColumn fx:id="title" text="%results.title"></TableColumn>
-    		<TableColumn fx:id="price" text="%results.price"></TableColumn>
-    		<TableColumn fx:id="stock" text="%results.stock"></TableColumn>
+			<TableColumn fx:id="title" text="%results.title"/>
+			<TableColumn fx:id="price" text="%results.price"/>
+			<TableColumn fx:id="stock" text="%results.stock"/>
 		</columns>   
 	</TableView>
-	
-	<ProgressBar fx:id="progressBar" GridPane.columnIndex="0" GridPane.rowIndex="2" maxWidth="Infinity"></ProgressBar>
+
+	<ProgressBar fx:id="progressBar" GridPane.columnIndex="0" GridPane.rowIndex="2" maxWidth="Infinity"/>
 </GridPane>
