@@ -1,54 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
-<GridPane xmlns:fx="http://javafx.com/fxml" hgap="10" vgap="10">
-    <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS" />
-    </columnConstraints>
-    <rowConstraints>
-        <RowConstraints percentHeight="20.0" />
-        <RowConstraints percentHeight="80.0" />
-    </rowConstraints>
 
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label fx:id="titleLabel">
+            <padding>
+                <Insets bottom="5.0" />
+            </padding>
+        </Label>
+        <Label fx:id="priceLabel">
+            <padding>
+                <Insets bottom="5.0" />
+            </padding>
+        </Label>
+        <Label fx:id="addressLabel">
+            <padding>
+                <Insets bottom="5.0" />
+            </padding>
+        </Label>
+        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets bottom="10.0" top="10.0" />
+            </padding>
+            <children>
+                <WebView fx:id="webView" layoutX="210.0" layoutY="56.0" prefHeight="311.0" prefWidth="620.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            </children>
+        </AnchorPane>
+        <Button maxWidth="Infinity" mnemonicParsing="false" text="Добавить в список покупок" />
+    </children>
     <padding>
-        <Insets top="10" right="25" bottom="10" left="25" />
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
-
-    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
-        <HBox>
-            <Button fx:id="backButton" onAction="#handleBackButtonAction" text="%results.back_button">
-                <HBox.margin>
-                    <Insets right="10"/>
-                </HBox.margin>
-            </Button>
-            <Button fx:id="addToListButton" text="Добавить в список покупок"/>
-        </HBox>
-        <Text fx:id="titleText">
-            <font>
-                <Font size="14.0"/>
-            </font>
-        </Text>
-        <Text fx:id="priceText">
-            <font>
-                <Font size="14.0"/>
-            </font>
-        </Text>
-        <Text fx:id="addressText">
-            <font>
-                <Font size="14.0"/>
-            </font>
-        </Text>
-    </VBox>
-
-    <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="0" GridPane.rowIndex="1">
-        <Tab text="На карте">
-            <WebView fx:id="webView"/>
-        </Tab>
-    </TabPane>
-
-</GridPane>
+</VBox>

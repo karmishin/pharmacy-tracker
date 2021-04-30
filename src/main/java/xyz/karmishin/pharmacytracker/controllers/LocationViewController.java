@@ -4,6 +4,7 @@ import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -22,11 +23,11 @@ public class LocationViewController implements Initializable {
 	private Item item;
 
 	@FXML
-	private Text titleText;
+	private Label titleLabel;
 	@FXML
-	private Text priceText;
+	private Label priceLabel;
 	@FXML
-	private Text addressText;
+	private Label addressLabel;
 	@FXML
 	private WebView webView;
 
@@ -40,9 +41,9 @@ public class LocationViewController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		titleText.setText(item.getTitle());
-		priceText.setText(String.valueOf(pharmacyLocation.getPrice()));
-		addressText.setText(pharmacyLocation.getAddress());
+		titleLabel.setText(item.getTitle());
+		priceLabel.setText(String.valueOf(pharmacyLocation.getPrice()));
+		addressLabel.setText(pharmacyLocation.getAddress());
 
 		String mapPageUrl = getClass().getResource("/map/map.html").toExternalForm();
 		WebEngine webEngine = webView.getEngine();
@@ -58,16 +59,5 @@ public class LocationViewController implements Initializable {
 			webEngine.executeScript("L.marker([" + geocodingService.getValue() +
 					"]).addTo(map).bindPopup('" + pharmacyLocation.getAddress() + "');");
 		}));
-	}
-
-	@FXML
-	protected void handleBackButtonAction(ActionEvent event) {
-//		if (geocodingService.isRunning()) {
-//			geocodingService.cancel();
-//		}
-//
-//		var locationTableController = new LocationTableController(item, locationService);
-//		var sceneSwitcher = new SceneSwitcher("/fxml/locationtable.fxml", locationTableController, event);
-//		sceneSwitcher.switchScene();
 	}
 }
