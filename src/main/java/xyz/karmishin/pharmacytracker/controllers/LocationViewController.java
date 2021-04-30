@@ -1,15 +1,16 @@
 package xyz.karmishin.pharmacytracker.controllers;
 
+import javafx.beans.property.SimpleListProperty;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import xyz.karmishin.pharmacytracker.entities.Item;
 import xyz.karmishin.pharmacytracker.entities.Location;
+import xyz.karmishin.pharmacytracker.entities.ShoppingListEntry;
 import xyz.karmishin.pharmacytracker.scrapers.ScraperService;
 import xyz.karmishin.pharmacytracker.services.GeocodingService;
 
@@ -18,9 +19,9 @@ import java.util.ResourceBundle;
 
 public class LocationViewController implements Initializable {
 	private GeocodingService geocodingService;
-	private ScraperService<Location> locationService;
 	private Location pharmacyLocation;
 	private Item item;
+	private SimpleListProperty<ShoppingListEntry> shoppingListProperty;
 
 	@FXML
 	private Label titleLabel;
@@ -31,12 +32,12 @@ public class LocationViewController implements Initializable {
 	@FXML
 	private WebView webView;
 
-	public LocationViewController(Location pharmacyLocation, ScraperService<Location> locationService, Item item) {
+	public LocationViewController(Location pharmacyLocation, ScraperService<Location> locationService, Item item, SimpleListProperty<ShoppingListEntry> shoppingListProperty) {
 		geocodingService = new GeocodingService(pharmacyLocation.getAddress());
 
 		this.pharmacyLocation = pharmacyLocation;
 		this.item = item;
-		this.locationService = locationService;
+		this.shoppingListProperty = shoppingListProperty;
 	}
 
 	@Override
@@ -59,5 +60,11 @@ public class LocationViewController implements Initializable {
 			webEngine.executeScript("L.marker([" + geocodingService.getValue() +
 					"]).addTo(map).bindPopup('" + pharmacyLocation.getAddress() + "');");
 		}));
+	}
+
+	@FXML
+	protected void handleAddToListButtonAction(ActionEvent event) {
+		var entry = new ShoppingListEntry(item, pharmacyLocation, geocodingService.getValue());
+		shoppingListProperty.get().add(entry);
 	}
 }

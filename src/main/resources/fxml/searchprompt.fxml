@@ -58,15 +58,16 @@
             <RadioButton fx:id="vita" text="%pharmacy.vita" toggleGroup="$group"
                 GridPane.columnIndex="0" GridPane.rowIndex="3">
             </RadioButton>
-
-            <RadioButton fx:id="aptekaru" text="%pharmacy.aptekaru" toggleGroup="$group" disable="true"
-                GridPane.columnIndex="0" GridPane.rowIndex="4">
-            </RadioButton>
         </GridPane>
     </center>
 
     <bottom>
-        <HBox alignment="bottom_right">
+        <HBox alignment="BOTTOM_CENTER">
+            <Button onAction="#handleListButtonAction" text="%mainscreen.list" style="-fx-background-color: green; -fx-text-fill: white;">
+                <HBox.margin>
+                    <Insets right="10" bottom="10" />
+                </HBox.margin>
+            </Button>
             <Button text="%mainscreen.settings">
                 <HBox.margin>
                     <Insets right="10" bottom="10" />

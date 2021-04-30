@@ -1,27 +1,26 @@
 package xyz.karmishin.pharmacytracker.controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import javafx.beans.property.SimpleListProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import xyz.karmishin.pharmacytracker.SceneSwitcher;
 import xyz.karmishin.pharmacytracker.entities.Item;
+import xyz.karmishin.pharmacytracker.entities.ShoppingListEntry;
 import xyz.karmishin.pharmacytracker.scrapers.ScraperNotFoundException;
 import xyz.karmishin.pharmacytracker.scrapers.ScraperService;
 import xyz.karmishin.pharmacytracker.scrapers.ScraperServiceFactory;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 public class ItemTableController implements Initializable {
 	private ScraperService<Item> service;
+	private SimpleListProperty<ShoppingListEntry> shoppingListProperty;
+	private SearchPromptController searchPromptController;
 
 	@FXML
 	private Label label;
@@ -36,7 +35,10 @@ public class ItemTableController implements Initializable {
 	@FXML
 	private TableColumn<Item, String> stock;
 
-	public ItemTableController(String name, String pharmacyChain) {
+	public ItemTableController(String name, String pharmacyChain, SimpleListProperty<ShoppingListEntry> shoppingListProperty, SearchPromptController searchPromptController) {
+		this.shoppingListProperty = shoppingListProperty;
+		this.searchPromptController = searchPromptController;
+
 		try {
 			service = ScraperServiceFactory.makeItemScraperService(name, pharmacyChain);
 			service.start();
@@ -61,9 +63,9 @@ public class ItemTableController implements Initializable {
 		stock.prefWidthProperty().bind(tableView.widthProperty().divide(4));
 
 		// set the column factories
-		title.setCellValueFactory(new PropertyValueFactory<Item, String>("title"));
-		price.setCellValueFactory(new PropertyValueFactory<Item, String>("price"));
-		stock.setCellValueFactory(new PropertyValueFactory<Item, String>("stock"));
+		title.setCellValueFactory(new PropertyValueFactory<>("title"));
+		price.setCellValueFactory(new PropertyValueFactory<>("price"));
+		stock.setCellValueFactory(new PropertyValueFactory<>("stock"));
 
 		tableView.setRowFactory(value -> {
 			TableRow<Item> row = new TableRow<>();
@@ -71,7 +73,7 @@ public class ItemTableController implements Initializable {
 			row.setOnMouseClicked(event -> {
 				if (event.getClickCount() == 2 && (!row.isEmpty())) {
 					var item = row.getItem();
-					var locationTableController = new LocationTableController(item, service);
+					var locationTableController = new LocationTableController(item, service, shoppingListProperty, this);
 					var sceneSwitcher = new SceneSwitcher("/fxml/locationtable.fxml", locationTableController, event);
 					sceneSwitcher.switchScene();
 				}
@@ -87,7 +89,6 @@ public class ItemTableController implements Initializable {
 			service.cancel();
 		}
 
-		var searchPromptController = new SearchPromptController();
 		var sceneSwitcher = new SceneSwitcher("/fxml/searchprompt.fxml", searchPromptController, event);
 		sceneSwitcher.switchScene();
 	}

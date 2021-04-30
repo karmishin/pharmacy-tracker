@@ -1,5 +1,6 @@
 package xyz.karmishin.pharmacytracker.controllers;
 
+import javafx.beans.property.SimpleListProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,18 +14,22 @@ import javafx.stage.Stage;
 import xyz.karmishin.pharmacytracker.SceneSwitcher;
 import xyz.karmishin.pharmacytracker.entities.Item;
 import xyz.karmishin.pharmacytracker.entities.Location;
+import xyz.karmishin.pharmacytracker.entities.ShoppingListEntry;
 import xyz.karmishin.pharmacytracker.scrapers.ScraperNotFoundException;
 import xyz.karmishin.pharmacytracker.scrapers.ScraperService;
 import xyz.karmishin.pharmacytracker.scrapers.ScraperServiceFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class LocationTableController implements Initializable {
 	private ScraperService<Location> locationService;
 	private ScraperService<Item> itemService;
 	private Item item;
+	private SimpleListProperty<ShoppingListEntry> shoppingListProperty;
+	private ItemTableController itemTableController;
 
 	@FXML
 	private Label titleLabel;
@@ -38,16 +43,16 @@ public class LocationTableController implements Initializable {
 	private TableColumn<Location, Double> price;
 	@FXML
 	private TableColumn<Location, String> stock;
-	@FXML
-	private Tab mapTab;
 
-	public LocationTableController(Item item, ScraperService<Item> itemService) {
+	public LocationTableController(Item item, ScraperService<Item> itemService, SimpleListProperty<ShoppingListEntry> shoppingListProperty, ItemTableController itemTableController) {
+		this.itemTableController = itemTableController;
 		try {
 			locationService = ScraperServiceFactory.makeLocationScraperService(item, itemService.getPharmacyChain());
 			locationService.start();
 
 			this.item = item;
 			this.itemService = itemService;
+			this.shoppingListProperty = shoppingListProperty;
 		} catch (ScraperNotFoundException e) {
 			var alert = new Alert(AlertType.ERROR, e.getMessage());
 			alert.show();
@@ -67,9 +72,9 @@ public class LocationTableController implements Initializable {
 		stock.prefWidthProperty().bind(tableView.widthProperty().divide(4));
 
 		// set the column factories
-		address.setCellValueFactory(new PropertyValueFactory<Location, String>("address"));
-		price.setCellValueFactory(new PropertyValueFactory<Location, Double>("price"));
-		stock.setCellValueFactory(new PropertyValueFactory<Location, String>("stock"));
+		address.setCellValueFactory(new PropertyValueFactory<>("address"));
+		price.setCellValueFactory(new PropertyValueFactory<>("price"));
+		stock.setCellValueFactory(new PropertyValueFactory<>("stock"));
 
 		tableView.setRowFactory(value -> {
 			TableRow<Location> row = new TableRow<>();
@@ -79,12 +84,16 @@ public class LocationTableController implements Initializable {
 					var stage = new Stage();
 					stage.show();
 
-					var pharmacyLocation = row.getItem();
-					var locationViewController = new LocationViewController(pharmacyLocation, locationService, item);
-
 					var loader = new FXMLLoader();
 					loader.setLocation(getClass().getResource("/fxml/locationview.fxml"));
+
+					var pharmacyLocation = row.getItem();
+					var locationViewController = new LocationViewController(pharmacyLocation, locationService, item, shoppingListProperty);
 					loader.setController(locationViewController);
+
+					var locale = new Locale("ru", "RU");    // TODO
+					var resourceBundle = ResourceBundle.getBundle("/strings/strings", locale);
+					loader.setResources(resourceBundle);
 					try {
 						Pane pane = loader.load();
 						stage.setScene(new Scene(pane));
@@ -104,7 +113,6 @@ public class LocationTableController implements Initializable {
 			locationService.cancel();
 		}
 
-		var itemTableController = new ItemTableController(itemService);
 		var sceneSwitcher = new SceneSwitcher("/fxml/itemtable.fxml", itemTableController, event);
 		sceneSwitcher.switchScene();
 	}
