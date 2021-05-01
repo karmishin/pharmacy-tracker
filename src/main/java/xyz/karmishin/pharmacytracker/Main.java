@@ -1,20 +1,16 @@
 package xyz.karmishin.pharmacytracker;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
-
 import javafx.application.Application;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.openqa.selenium.Platform;
 import xyz.karmishin.pharmacytracker.controllers.SearchPromptController;
 import xyz.karmishin.pharmacytracker.entities.ShoppingListEntry;
+
+import java.util.Objects;
 
 public class Main extends Application {
 	@Override
@@ -30,6 +26,15 @@ public class Main extends Application {
 		sceneSwitcher.switchScene();
 
 		primaryStage.show();
+
+		switch (Platform.getCurrent()) {
+			case WINDOWS:
+				System.setProperty("webdriver.chrome.driver", getClass().getResource("/bin/chromedriver.exe").getPath());
+				break;
+			case LINUX:
+				System.setProperty("webdriver.chrome.driver", getClass().getResource("/bin/chromedriver").getPath());
+				break;
+		}
 	}
 
 	public static void main(String[] args) {

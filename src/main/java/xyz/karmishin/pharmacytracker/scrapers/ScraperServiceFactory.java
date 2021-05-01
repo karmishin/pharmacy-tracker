@@ -5,6 +5,7 @@ import xyz.karmishin.pharmacytracker.entities.Location;
 import xyz.karmishin.pharmacytracker.scrapers.maksavit.MaksavitItemScraperService;
 import xyz.karmishin.pharmacytracker.scrapers.maksavit.MaksavitLocationScraperService;
 import xyz.karmishin.pharmacytracker.scrapers.vita.VitaItemScraperService;
+import xyz.karmishin.pharmacytracker.scrapers.vita.VitaLocationScraperService;
 
 public class ScraperServiceFactory {
     public static ScraperService<Item> makeItemScraperService(String query, String pharmacyChain)
@@ -24,6 +25,8 @@ public class ScraperServiceFactory {
         switch (pharmacyChain) {
             case "maksavit":
                 return new MaksavitLocationScraperService(item);
+            case "vita":
+                return new VitaLocationScraperService(item);
             default:
                 throw new ScraperNotFoundException(pharmacyChain);
         }

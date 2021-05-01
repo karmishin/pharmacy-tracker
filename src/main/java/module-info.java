@@ -11,4 +11,8 @@ module xyz.karmishin.pharmacytracker {
     requires org.jsoup;
     requires com.fasterxml.jackson.databind;
     requires org.apache.logging.log4j;
+    requires selenium.chrome.driver;
+    requires selenium.api;
+    requires selenium.java;
+    requires selenium.support;
 }
