@@ -83,7 +83,6 @@ public class MaksavitItemScraperService extends ScraperService<Item> {
 
 				Platform.runLater(() -> {
 					partialResults.get().add(item);
-					logger.debug("added " + itemName);
 				});
 			}
 		}

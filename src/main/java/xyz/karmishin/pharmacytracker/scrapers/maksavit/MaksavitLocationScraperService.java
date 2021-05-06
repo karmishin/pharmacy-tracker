@@ -77,7 +77,6 @@ public class MaksavitLocationScraperService extends ScraperService<Location> {
                 var location = new Location(locationAddress, locationPrice, locationStock);
                 Platform.runLater(() -> {
                     partialResults.get().add(location);
-                    logger.debug("added " + locationAddress);
                 });
             }
 
