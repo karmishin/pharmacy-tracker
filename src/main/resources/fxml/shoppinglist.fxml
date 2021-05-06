@@ -49,7 +49,7 @@
                 <Insets bottom="10.0" top="10.0" />
             </padding>
         </AnchorPane>
-        <Button maxWidth="Infinity" mnemonicParsing="false" text="%list.export" />
+        <Button fx:id="exportButton" onAction="#handleExportButtonAction" maxWidth="Infinity" mnemonicParsing="false" text="%list.export" />
     </children>
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
