@@ -29,6 +29,9 @@ public class Main extends Application {
 
 		switch (Platform.getCurrent()) {
 			case WINDOWS:
+			case WIN8:
+			case WIN8_1:
+			case WIN10:
 				System.setProperty("webdriver.chrome.driver", getClass().getResource("/bin/chromedriver.exe").getPath());
 				break;
 			case LINUX:
