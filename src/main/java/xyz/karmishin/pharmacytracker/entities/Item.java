@@ -5,7 +5,6 @@ import java.util.List;
 
 public class Item {
 	private String title, price, stock, url;
-	private List<Location> locationList;
 
 	public Item(String title, String price, String stock, String url) {
 		this.title = title;
@@ -33,13 +32,5 @@ public class Item {
 	
 	public String getUrl() {
 		return url;
-	}
-	
-	public void addLocation(Location location) {
-		locationList.add(location);
-	}
-	
-	public void sortLocationListByPrice() {
-		locationList.sort(Comparator.comparingDouble(Location::getPrice));
 	}
 }

@@ -6,6 +6,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.qrcode.QRCodeWriter;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
@@ -16,32 +17,34 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import xyz.karmishin.pharmacytracker.Persistence;
 import xyz.karmishin.pharmacytracker.entities.ShoppingListEntry;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.SQLException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
 public class ShoppingListController implements Initializable {
-    private SimpleListProperty<ShoppingListEntry> shoppingListProperty;
     private static Logger logger = LogManager.getLogger();
-
+    private SimpleListProperty<ShoppingListEntry> shoppingListProperty;
+    private ResourceBundle resourceBundle;
     @FXML
     private TableView<ShoppingListEntry> tableView;
     @FXML
@@ -57,6 +60,7 @@ public class ShoppingListController implements Initializable {
 
     public ShoppingListController(SimpleListProperty<ShoppingListEntry> shoppingListProperty) {
         this.shoppingListProperty = shoppingListProperty;
+        resourceBundle = ResourceBundle.getBundle("strings/strings", new Locale("ru", "RU"));
     }
 
     @Override
@@ -72,6 +76,24 @@ public class ShoppingListController implements Initializable {
         title.setCellValueFactory(new PropertyValueFactory<>("title"));
         price.setCellValueFactory(new PropertyValueFactory<>("price"));
         address.setCellValueFactory(new PropertyValueFactory<>("address"));
+
+        tableView.setRowFactory(value -> {
+            TableRow<ShoppingListEntry> row = new TableRow<>();
+            row.setOnMouseClicked(mouseEvent -> {
+                var contextMenu = new ContextMenu();
+                var removeButton = new MenuItem(resourceBundle.getString("list.remove"));
+                removeButton.setOnAction(e -> {
+                    removeEntry(row.getItem());
+                });
+                contextMenu.getItems().add(removeButton);
+                row.contextMenuProperty().bind(
+                        Bindings.when(row.emptyProperty())
+                                .then((ContextMenu) null)
+                                .otherwise(contextMenu));
+
+            });
+            return row;
+        });
 
         String mapPageUrl = getClass().getResource("/map/map.html").toExternalForm();
         WebEngine webEngine = webView.getEngine();
@@ -123,6 +145,17 @@ public class ShoppingListController implements Initializable {
             logger.debug("Upload service started");
         } catch (JsonProcessingException jsonProcessingException) {
             new Alert(Alert.AlertType.ERROR, jsonProcessingException.getMessage()).show();
+        }
+    }
+
+    private void removeEntry(ShoppingListEntry entry) {
+        try {
+            var persistence = new Persistence();
+            persistence.createShoppingListDao().delete(entry);
+            persistence.close();
+            shoppingListProperty.get().remove(entry);
+        } catch (SQLException | IOException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         }
     }
 

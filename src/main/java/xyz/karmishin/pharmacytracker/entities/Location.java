@@ -10,11 +10,6 @@ public class Location {
 		this.stock = stock;
 	}
 
-	@Override
-	public String toString() {
-		return String.format(" * %s -- %s руб. -- %s шт. \n", address, price, stock);
-	}	
-
 	public double getPrice() {
 		return price;
 	}
