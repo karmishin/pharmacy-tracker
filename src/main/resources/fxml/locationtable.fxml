@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -14,21 +15,29 @@
 	<children>
 		<HBox>
 			<children>
-				<Button fx:id="backButton" onAction="#handleBackButtonAction" alignment="CENTER" mnemonicParsing="false" text="%results.back_button" />
-				<Label fx:id="titleLabel" maxWidth="Infinity" prefHeight="26.0" >
+				<Button fx:id="backButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleBackButtonAction" text="%results.back_button" />
+				<Label fx:id="titleLabel" maxWidth="Infinity" prefHeight="26.0">
 					<HBox.margin>
 						<Insets left="10.0" />
 					</HBox.margin>
 				</Label>
 			</children>
 		</HBox>
+      <TextField fx:id="filterField" onKeyTyped="#onTextChanged">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </TextField>
 		<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
 			<children>
 				<TableView fx:id="tableView" layoutX="210.0" layoutY="77.0" prefHeight="335.0" prefWidth="620.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 					<columns>
-						<TableColumn fx:id="address" text="%results.address"/>
-						<TableColumn fx:id="price" text="%results.price"/>
-						<TableColumn fx:id="stock" text="%results.stock"/>
+						<TableColumn fx:id="address" text="%results.address" />
+						<TableColumn fx:id="price" text="%results.price" />
+						<TableColumn fx:id="stock" text="%results.stock" />
 					</columns>
 				</TableView>
 			</children>

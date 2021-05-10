@@ -1,6 +1,8 @@
 package xyz.karmishin.pharmacytracker.controllers;
 
 import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +17,8 @@ import xyz.karmishin.pharmacytracker.scrapers.ScraperService;
 import xyz.karmishin.pharmacytracker.scrapers.ScraperServiceFactory;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ItemTableController implements Initializable {
@@ -34,6 +38,8 @@ public class ItemTableController implements Initializable {
 	private TableColumn<Item, String> price;
 	@FXML
 	private TableColumn<Item, String> stock;
+	@FXML
+	private TextField filterField;
 
 	public ItemTableController(String name, String pharmacyChain, SimpleListProperty<ShoppingListEntry> shoppingListProperty, SearchPromptController searchPromptController) {
 		this.shoppingListProperty = shoppingListProperty;
@@ -81,6 +87,26 @@ public class ItemTableController implements Initializable {
 
 			return row;
 		});
+	}
+
+	@FXML
+	protected void onTextChanged() {
+		if (filterField.getText().isEmpty()) {
+			tableView.itemsProperty().bind(service.partialResultsProperty());
+			return;
+		}
+		tableView.itemsProperty().unbind();
+		tableView.setItems(filterList(service.getPartialResults(), filterField.getText()));
+	}
+
+	private ObservableList<Item> filterList(List<Item> itemList, String searchText) {
+		var filteredList = new ArrayList<Item>();
+		for (Item item : itemList) {
+			if (item.getTitle().toLowerCase().contains(searchText.toLowerCase())) {
+				filteredList.add(item);
+			}
+		}
+		return FXCollections.observableList(filteredList);
 	}
 
 	@FXML

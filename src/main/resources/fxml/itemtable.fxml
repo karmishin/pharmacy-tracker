@@ -5,19 +5,28 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<Button fx:id="backButton" onAction="#handleBackButtonAction" text="%results.back_button" alignment="CENTER" mnemonicParsing="false" />
+		<Button fx:id="backButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleBackButtonAction" text="%results.back_button">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin></Button>
+      <TextField fx:id="filterField" onKeyReleased="#onTextChanged">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </TextField>
 		<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
 			<children>
 				<TableView fx:id="tableView" layoutX="210.0" layoutY="77.0" prefHeight="335.0" prefWidth="620.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 					<columns>
-						<TableColumn fx:id="title" text="%results.title"/>
-						<TableColumn fx:id="price" text="%results.price"/>
-						<TableColumn fx:id="stock" text="%results.stock"/>
+						<TableColumn fx:id="title" text="%results.title" />
+						<TableColumn fx:id="price" text="%results.price" />
+						<TableColumn fx:id="stock" text="%results.stock" />
 					</columns>
 				</TableView>
 			</children>

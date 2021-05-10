@@ -1,6 +1,8 @@
 package xyz.karmishin.pharmacytracker.controllers;
 
 import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +23,8 @@ import xyz.karmishin.pharmacytracker.scrapers.ScraperServiceFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -43,6 +47,8 @@ public class LocationTableController implements Initializable {
 	private TableColumn<Location, Double> price;
 	@FXML
 	private TableColumn<Location, String> stock;
+	@FXML
+	private TextField filterField;
 
 	public LocationTableController(Item item, ScraperService<Item> itemService, SimpleListProperty<ShoppingListEntry> shoppingListProperty, ItemTableController itemTableController) {
 		this.itemTableController = itemTableController;
@@ -105,6 +111,26 @@ public class LocationTableController implements Initializable {
 
 			return row;
 		});
+	}
+
+	@FXML
+	protected void onTextChanged() {
+		if (filterField.getText().isEmpty()) {
+			tableView.itemsProperty().bind(locationService.partialResultsProperty());
+			return;
+		}
+		tableView.itemsProperty().unbind();
+		tableView.setItems(filterList(locationService.getPartialResults(), filterField.getText()));
+	}
+
+	private ObservableList<Location> filterList(List<Location> locationList, String searchText) {
+		var filteredList = new ArrayList<Location>();
+		for (Location location : locationList) {
+			if (location.getAddress().toLowerCase().contains(searchText.toLowerCase())) {
+				filteredList.add(location);
+			}
+		}
+		return FXCollections.observableList(filteredList);
 	}
 
 	@FXML
